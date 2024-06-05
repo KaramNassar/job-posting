@@ -4,8 +4,14 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+                'hanken-grotesk': ['Hanken Grotesk', 'sans-serif']
             },
+            colors: {
+                'black': '#060609'
+            },
+            fontSize: {
+                '2xs': '.625rem'
+            }
         },
     },
     variants: {
