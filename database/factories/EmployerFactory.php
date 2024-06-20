@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Employer;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+use function fake;
+
+/**
+ * @extends Factory<Employer>
+ */
+class EmployerFactory extends Factory
+{
+	/**
+	 * Define the model's default state.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function definition(): array
+	{
+		return [
+			'name'    => fake()->name,
+			'logo'    => fake()->imageUrl(),
+			'website' => fake()->url(),
+			'user_id' => User::factory()
+		];
+	}
+}

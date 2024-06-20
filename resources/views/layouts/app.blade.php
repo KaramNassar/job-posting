@@ -1,31 +1,23 @@
 @extends('layouts.base')
 
 @section('body')
-	<div class="px-10">
-		<nav class="flex justify-between items-center py-4 border-b border-white/15">
-			<div>
-				<a href="">
-					<img src="{{ Vite::asset('resources/images/logo1.png') }}" width="91" height="28" alt="Career Spring Logo">
-				</a>
+	<div x-data="{ userDropdownOpen: false, mobileNavOpen: false }"
+	     id="page-container"
+	     class="mx-auto flex flex-col justify-between min-h-dvh w-full min-w-[320px] bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
+
+
+		<x-header/>
+
+		<main id="page-content" class="flex max-w-full flex-auto flex-col my-10">
+			<div class="px-10">
+				@yield('content')
+
+				@isset($slot)
+					{{ $slot }}
+				@endisset
 			</div>
-
-			<div class="space-x-6 font-bold text-sm">
-				<a href="">Jobs</a>
-				<a href="">Careers</a>
-				<a href="">Salaries</a>
-				<a href="">Companies</a>
-			</div>
-
-			<div>post a job</div>
-		</nav>
-
-		<main class="mt-10 max-w-[986px] mx-auto">
-			@yield('content')
-
-			@isset($slot)
-				{{ $slot }}
-			@endisset
 		</main>
-	</div>
 
+		<x-footer/>
+	</div>
 @endsection
