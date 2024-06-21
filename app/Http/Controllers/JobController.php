@@ -2,27 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreJobRequest;
 use App\Http\Requests\UpdateJobRequest;
 use App\Models\Job;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
-use function explode;
-use function redirect;
-use function view;
+use function back;
 
 class JobController extends Controller
 {
-	/**
-	 * Display a listing of the resource.
-	 */
 	public function index()
 	{
-		$featuredJobs = Job::whereFeatured(true)->latest()->get();
-		$jobs = Job::latest()->get();
+		$featuredJobs = Job::whereFeatured(true)->latest('updated_at')->get();
+		$jobs = Job::latest('updated_at')->get();
 
 		return view('jobs.index', [
 			'featuredJobs' => $featuredJobs,
@@ -31,70 +25,71 @@ class JobController extends Controller
 		]);
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 */
-	public function store(Request $request)
+	public function store(StoreJobRequest $request)
 	{
-		$attributes = $request->validate([
-			'title'       => ['required'],
-			'salary'      => ['required'],
-			'location'    => ['required'],
-			'schedule'    => ['required', Rule::in(['Part Time', 'Full Time'])],
-			'url'         => ['required', 'url'],
-			'tags'        => ['nullable'],
-		]);
+		$attributes = $request->validated();
 
 		$attributes['featured'] = $request->has('featured');
 
 		$job = Auth::user()->employer->jobs()->create(Arr::except($attributes, 'tags'));
 
-		if ($attributes['tags']) {
-			foreach (explode(',', $attributes['tags']) as $tag) {
-				$job->tag($tag);
-			}
+		if (isset($attributes['tags'])) {
+			$job->syncTags($attributes['tags']);
+		} else {
+			$job->syncTags([]);
 		}
 
 		return redirect('/');
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 */
 	public function create()
 	{
-		return view('jobs.create');
+		$tags = Tag::all()->pluck('name');
+
+		return view('jobs.create', [
+			'tags' => $tags
+		]);
 	}
 
-	/**
-	 * Display the specified resource.
-	 */
 	public function show(Job $job)
 	{
 		//
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 */
 	public function edit(Job $job)
 	{
-		//
+		$tags = Tag::all()->pluck('name');
+		$selectedTags = $job->tags->pluck('name');
+
+
+		return view('jobs.edit', [
+			'job'          => $job,
+			'tags'         => $tags,
+			'selectedTags' => $selectedTags,
+		]);
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 */
 	public function update(UpdateJobRequest $request, Job $job)
 	{
-		//
+		$attributes = $request->validated();
+
+		$attributes['featured'] = $request->has('featured');
+
+		$job->update(Arr::except($attributes, 'tags'));
+
+		if (isset($attributes['tags'])) {
+			$job->syncTags($attributes['tags']);
+		} else {
+			$job->syncTags([]);
+		}
+
+		return redirect('/');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 */
 	public function destroy(Job $job)
 	{
-		//
+		$job->delete();
+
+		return back();
 	}
 }

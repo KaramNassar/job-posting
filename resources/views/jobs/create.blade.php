@@ -19,7 +19,12 @@
 
 		<x-forms.divider/>
 
-		<x-forms.input label="Tags (comma seperated)" name="tags" placeholder="Frontend, Tailwind, Vue.js"/>
+		<x-forms.select label="Tags" id="tags" name="tags[]" placeholder="Select tags" multiple>
+			@foreach ($tags as $id => $tag)
+				<option value="{{ $tag }}" @selected(old('tags') && in_array($tag, old('tags')))>{{ $tag }}</option>
+			@endforeach
+		</x-forms.select>
+
 
 		<x-forms.button>Publish</x-forms.button>
 	</x-forms.form>

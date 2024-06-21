@@ -37,5 +37,7 @@
         document.documentElement.classList.remove('dark')
     }
 </script>
+
+@stack('scripts')
 </body>
 </html>

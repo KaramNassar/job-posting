@@ -16,9 +16,13 @@
 		<p class="text-sm text-gray-400 mt-auto">{{ $job->salary }}</p>
 	</div>
 
-	<div class="space-y-1 sm:space-x-1 flex flex-col sm:block z-50">
-		@foreach($job->tags as $tag)
-			<x-tag :$tag/>
-		@endforeach
+	<div class="flex flex-col items-end justify-between">
+		<div class="space-y-1 sm:space-x-1 flex flex-col sm:block z-50">
+			@foreach($job->tags as $tag)
+				<x-tag :$tag/>
+			@endforeach
+		</div>
+		<x-edit-delete-buttons :model="$job"/>
+
 	</div>
 </x-panel>

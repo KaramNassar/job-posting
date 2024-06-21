@@ -6,7 +6,7 @@
  * https://unpkg.com/tailwindcss/dist/base.css
  */
 @tailwind base;
-
+@import "tom-select/dist/css/tom-select.default.css";
 /**
  * Remove the default box-shadow for invalid elements to prevent
  * inputs in Livewire components showing with a
@@ -53,3 +53,4 @@
 [x-cloak] {
     display: none;
 }
+

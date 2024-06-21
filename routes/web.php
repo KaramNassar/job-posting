@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [JobController::class, 'index'])->name('jobs.index');
+
 Route::get('/employers', [EmployerController::class, 'index'])->name('employers.index');
 Route::get('/employers/{employer}/jobs', [EmployerController::class, 'show'])->name('employers.jobs');
 
@@ -26,7 +27,12 @@ Route::middleware('auth')->group(function () {
 	Route::name('jobs.')->group(function () {
 		Route::get('/jobs/create', [JobController::class, 'create'])->name('create');
 		Route::post('/jobs', [JobController::class, 'store'])->name('store');
+
+		Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->can('edit', 'job')->name('edit');
+		Route::patch('/jobs/{job}', [JobController::class, 'update'])->can('update', 'job')->name('update');
+		Route::delete('/jobs/{job}', [JobController::class, 'destroy'])->can('delete', 'job')->name('destroy');
 	});
+
 
 	Route::delete('/logout', [SessionController::class, 'destroy'])->name('logout');
 

@@ -13,11 +13,13 @@ class Job extends Model
 
 	protected $with = ['employer', 'tags'];
 
-	public function tag(string $name): void
+	public function syncTags(array $tags): void
 	{
-		$tag = Tag::firstOrCreate(['name' => $name]);
-
-		$this->tags()->attach($tag);
+		$ids = [];
+		foreach ($tags as $tag) {
+			$ids[] = Tag::firstOrCreate(['name' => $tag])->id;
+		}
+		$this->tags()->sync($ids);
 	}
 
 	public function tags(): BelongsToMany
