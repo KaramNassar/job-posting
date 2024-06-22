@@ -22,7 +22,7 @@ Follow these steps to set up the project locally:
 1. **Clone the repository**:
    ```sh
    git clone https://github.com/KaramNassar/job-posting.git
-   cd job-posting-project
+   cd job-posting
    ```
 
 2. **Install dependencies**:
